@@ -10,7 +10,6 @@ import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
-from monty.json import jsanitize
 
 from pymatgen.core.structure import Molecule, Structure
 
@@ -218,14 +217,26 @@ class AseAtomsAdaptor:
             sel_dyn = None
 
         # Atoms.info <---> Structure.properties
-        properties = jsanitize(getattr(atoms, "info", {}))
+        # properties = jsanitize(getattr(atoms, "info", {}))
 
         # Return a Molecule object if that was specifically requested;
         # otherwise return a Structure object as expected
         if cls == Molecule:
-            structure = cls(symbols, positions, properties=properties, **cls_kwargs)
+            structure = cls(
+                symbols,
+                positions,
+                # properties=properties,
+                **cls_kwargs,
+            )
         else:
-            structure = cls(lattice, symbols, positions, coords_are_cartesian=True, properties=properties, **cls_kwargs)
+            structure = cls(
+                lattice,
+                symbols,
+                positions,
+                coords_are_cartesian=True,
+                # properties=properties,
+                **cls_kwargs,
+            )
 
         # Atoms.calc <---> Structure.calc
         if calc := getattr(atoms, "calc", None):
